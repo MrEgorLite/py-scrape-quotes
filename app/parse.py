@@ -16,7 +16,7 @@ class Quote:
 
 
 def page_generator(url: str) -> Generator[bytes, None, None]:
-    my_url = URL
+    my_url = url
     counter = 1
     while my_url:
         response = requests.get(my_url)

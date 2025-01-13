@@ -27,10 +27,13 @@ def page_generator(url: str) -> Generator[bytes, None, None]:
         if next_button:
             next_page = next_button.find("a")["href"]
             counter += 1
-            my_url = f"{url}page/{counter}/" if "catalogue" not in my_url else \
-            my_url.rsplit("/", 1)[0] + "/" + next_page
+
+            my_url = f"{url}page/{counter}/" \
+                if "catalogue" not in my_url else \
+                my_url.rsplit("/", 1)[0] + "/" + next_page
         else:
             my_url = None
+
 
 def parse_quotes(page_content: bytes) -> list[Quote]:
     quotes = []
@@ -41,10 +44,13 @@ def parse_quotes(page_content: bytes) -> list[Quote]:
             Quote(
                 text=html_quote.find("span", class_="text").text,
                 author=html_quote.find("small", class_="author").text,
-                tags=[tag.text for tag in html_quote.find_all("a", class_="tag")],
+                tags=[
+                    tag.text for tag in html_quote.find_all("a", class_="tag")
+                ],
             )
         )
     return quotes
+
 
 def scrape_quotes() -> list[Quote]:
     quotes = []
@@ -53,7 +59,7 @@ def scrape_quotes() -> list[Quote]:
     return quotes
 
 
-def write_to_file(quotes: list[Quote], output_file: str):
+def write_to_file(quotes: list[Quote], output_file: str) -> None:
     try:
         with open(output_file, "a", newline="") as csvfile:
             fieldnames = ["text", "author", "tags"]
@@ -69,10 +75,10 @@ def write_to_file(quotes: list[Quote], output_file: str):
         print("Can't save quotes to file")
         print(e)
 
+
 def main(output_csv_path: str) -> None:
     quotes = scrape_quotes()
     write_to_file(quotes, output_csv_path)
-
 
 
 if __name__ == "__main__":
